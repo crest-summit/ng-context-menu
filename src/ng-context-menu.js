@@ -18,7 +18,8 @@
     .directive('contextMenu', [
       '$document',
       'ContextMenuService',
-      function($document, ContextMenuService) {
+      '$parse',
+      function($document, ContextMenuService, $parse) {
         return {
           restrict: 'A',
           scope: {
@@ -29,6 +30,7 @@
           },
           link: function($scope, $element, $attrs) {
             var opened = false;
+            setOpen(false);
 
             function open(event, menuElement) {
               menuElement.addClass('open');
@@ -58,7 +60,7 @@
 
               menuElement.css('top', top + 'px');
               menuElement.css('left', left + 'px');
-              opened = true;
+              setOpen(true);
             }
 
             function close(menuElement) {
@@ -68,7 +70,7 @@
                 $scope.closeCallback();
               }
 
-              opened = false;
+              setOpen(false);
             }
 
             $element.bind('contextmenu', function(event) {
@@ -113,6 +115,20 @@
               }
             }
 
+            function setOpen(isOpened) {
+              opened = isOpened;
+              if (ContextMenuService.menuElement == null)
+                return;
+
+              var element = ContextMenuService.menuElement
+                  .attr('context-menu-opened');
+              if (element === undefined)
+                return;
+
+              var model = $parse(element);
+              model.assign(ContextMenuService.menuElement.scope(), isOpened);
+            }
+
             $document.bind('keyup', handleKeyUpEvent);
             // Firefox treats a right-click as a click and a contextmenu event
             // while other browsers just treat it as a contextmenu event
@@ -130,3 +146,4 @@
       }
     ]);
 })(angular);
+
