@@ -126,7 +126,7 @@
                 return;
 
               var model = $parse(element);
-              if (ContextMeenuService.menuElement.scope() != null)
+              if (ContextMenuService.menuElement.scope() != null)
                 model.assign(ContextMenuService.menuElement.scope(), isOpened);
             }
 
