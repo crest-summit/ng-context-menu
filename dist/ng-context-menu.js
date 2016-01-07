@@ -126,7 +126,8 @@
                 return;
 
               var model = $parse(element);
-              model.assign(ContextMenuService.menuElement.scope(), isOpened);
+              if (ContextMeenuService.menuElement.scope() != null)
+                model.assign(ContextMenuService.menuElement.scope(), isOpened);
             }
 
             $document.bind('keyup', handleKeyUpEvent);
